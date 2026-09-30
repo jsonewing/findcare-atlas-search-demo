@@ -1,0 +1,13 @@
+.env
+.env.pending
+.venv/
+vendor/
+.runtime/
+dist/
+uploads/
+generated/
+.pytest_cache/
+.coverage
+__pycache__/
+*.py[cod]
+.DS_Store

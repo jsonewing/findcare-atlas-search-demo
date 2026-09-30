@@ -1,0 +1,39 @@
+{
+  "fields": [
+    {
+      "type": "vector",
+      "path": "embedding",
+      "numDimensions": 1024,
+      "similarity": "cosine",
+      "quantization": "scalar"
+    },
+    {
+      "type": "filter",
+      "path": "document_type"
+    },
+    {
+      "type": "filter",
+      "path": "specialty_filter"
+    },
+    {
+      "type": "filter",
+      "path": "networks_filter"
+    },
+    {
+      "type": "filter",
+      "path": "languages_filter"
+    },
+    {
+      "type": "filter",
+      "path": "accepting_new_patients"
+    },
+    {
+      "type": "filter",
+      "path": "telehealth"
+    },
+    {
+      "type": "filter",
+      "path": "rating"
+    }
+  ]
+}

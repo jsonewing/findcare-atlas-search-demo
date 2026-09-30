@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 430" role="img" aria-label="Stylized Austin provider network map">
+  <defs>
+    <linearGradient id="land" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fbfdfb"/>
+      <stop offset="1" stop-color="#edf5f2"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#cfeee8"/>
+      <stop offset=".55" stop-color="#bfe4e8"/>
+      <stop offset="1" stop-color="#d5edf2"/>
+    </linearGradient>
+    <filter id="labelShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#17352c" flood-opacity=".08"/>
+    </filter>
+  </defs>
+
+  <rect width="1400" height="430" rx="18" fill="url(#land)"/>
+
+  <g opacity=".34">
+    <path d="M0 92H1400M0 184H1400M0 276H1400M0 368H1400" stroke="#d8e3df" stroke-width="1"/>
+    <path d="M110 0V430M260 0V430M410 0V430M560 0V430M710 0V430M860 0V430M1010 0V430M1160 0V430M1310 0V430" stroke="#d8e3df" stroke-width="1"/>
+  </g>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-65 238 C145 219 259 202 425 144 C588 87 702 112 836 184 C966 254 1111 251 1465 172"
+      stroke="url(#water)" stroke-width="46" opacity=".95"/>
+    <path d="M-65 238 C145 219 259 202 425 144 C588 87 702 112 836 184 C966 254 1111 251 1465 172"
+      stroke="#8fcfc8" stroke-width="4" opacity=".72"/>
+
+    <path d="M-25 353 C157 238 360 224 558 187 C755 151 918 125 1098 151 C1211 167 1291 160 1425 117"
+      stroke="#ffc565" stroke-width="15" opacity=".88"/>
+    <path d="M-25 353 C157 238 360 224 558 187 C755 151 918 125 1098 151 C1211 167 1291 160 1425 117"
+      stroke="#fff7e5" stroke-width="5" opacity=".95"/>
+
+    <path d="M170 -38 C220 92 281 177 367 247 C453 317 493 373 522 468"
+      stroke="#b7c7c2" stroke-width="12" opacity=".78"/>
+    <path d="M784 -35 C748 83 745 163 803 253 C844 317 883 366 915 468"
+      stroke="#b7c7c2" stroke-width="12" opacity=".78"/>
+    <path d="M-40 158 C190 188 330 201 521 197 C727 193 881 222 1039 246 C1190 269 1317 266 1440 256"
+      stroke="#c3d0cc" stroke-width="10" opacity=".6"/>
+    <path d="M-30 77 C178 136 331 131 519 105 C702 80 860 96 1036 137 C1169 168 1285 184 1430 177"
+      stroke="#ddccb2" stroke-width="10" opacity=".58"/>
+  </g>
+
+  <g opacity=".58" fill="#dfeae6" stroke="#c7d8d2">
+    <path d="M557 166h116c32 0 58 26 58 58v64c0 32-26 58-58 58H557c-32 0-58-26-58-58v-64c0-32 26-58 58-58z"/>
+    <path d="M898 254h142c37 0 68 30 68 68s-31 68-68 68H898c-37 0-68-30-68-68s31-68 68-68z"/>
+    <path d="M280 255h128c35 0 64 29 64 64s-29 64-64 64H280c-35 0-64-29-64-64s29-64 64-64z" opacity=".55"/>
+  </g>
+
+  <g filter="url(#labelShadow)">
+    <rect x="538" y="184" width="154" height="72" rx="14" fill="#ffffff" opacity=".93"/>
+    <path d="M608 199h18v18h18v16h-18v18h-18v-18h-18v-16h18z" fill="#00684a"/>
+    <text x="615" y="277" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="850" fill="#214139">Medical District</text>
+  </g>
+
+  <g font-family="Inter, Arial, sans-serif" font-weight="850" fill="#607a72" opacity=".82">
+    <text x="78" y="62" font-size="17">Lakeway</text>
+    <text x="65" y="354" font-size="17">South Austin</text>
+    <text x="535" y="143" font-size="17">Downtown</text>
+    <text x="915" y="82" font-size="17">North Austin</text>
+    <text x="1132" y="318" font-size="17">Round Rock</text>
+    <text x="1240" y="116" font-size="17">Cedar Park</text>
+  </g>
+
+  <g font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#8ca19a" opacity=".72">
+    <text x="428" y="111">MoPac</text>
+    <text x="835" y="171">I-35</text>
+    <text x="1037" y="145">US-183</text>
+  </g>
+</svg>

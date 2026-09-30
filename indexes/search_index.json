@@ -1,0 +1,101 @@
+{
+  "analyzer": "lucene.standard",
+  "searchAnalyzer": "lucene.standard",
+  "synonyms": [
+    {
+      "name": "medical_synonyms",
+      "analyzer": "lucene.standard",
+      "source": {
+        "collection": "medical_synonyms"
+      }
+    }
+  ],
+  "mappings": {
+    "dynamic": false,
+    "fields": {
+      "document_type": {
+        "type": "token"
+      },
+      "provider_id": {
+        "type": "token"
+      },
+      "provider_name": {
+        "type": "string",
+        "analyzer": "lucene.standard",
+        "searchAnalyzer": "lucene.standard"
+      },
+      "provider_type": {
+        "type": "string"
+      },
+      "specialty_name": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "specialty_group": {
+        "type": "string"
+      },
+      "aliases": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "conditions": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "procedures": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "splunk_user_keywords": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "care_summary": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "autocomplete_text": {
+        "type": "autocomplete",
+        "tokenization": "edgeGram",
+        "minGrams": 2,
+        "maxGrams": 15,
+        "foldDiacritics": true
+      },
+      "insurance_networks": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "languages": {
+        "type": "string",
+        "analyzer": "lucene.standard"
+      },
+      "specialty_filter": {
+        "type": "token",
+        "normalizer": "lowercase"
+      },
+      "networks_filter": {
+        "type": "token",
+        "normalizer": "lowercase"
+      },
+      "languages_filter": {
+        "type": "token",
+        "normalizer": "lowercase"
+      },
+      "city": {
+        "type": "string"
+      },
+      "location": {
+        "type": "geo"
+      },
+      "rating": {
+        "type": "number"
+      },
+      "accepting_new_patients": {
+        "type": "boolean"
+      },
+      "telehealth": {
+        "type": "boolean"
+      }
+    }
+  }
+}

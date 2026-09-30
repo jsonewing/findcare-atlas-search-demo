@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#001e2b" />
+    <title>FindCare Atlas Search Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.min.css" />
+    <link rel="stylesheet" href="./styles.css?v=atlas-search-v29" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">
+            <img src="/static/mongodb-leaf.svg" alt="" />
+          </div>
+          <div class="brand-copy">
+            <div class="platform-lockup" aria-label="MongoDB Atlas and Voyage AI">
+              <span class="atlas-wordmark">MongoDB Atlas</span>
+              <span class="lockup-divider" aria-hidden="true"></span>
+              <span class="voyage-wordmark">Voyage AI</span>
+            </div>
+            <h1>FindCare <span>Search Studio</span></h1>
+            <p class="header-subtitle">Member care discovery powered by Atlas</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="secondary architecture-button" type="button" data-code="architecture">Architecture</button>
+          <button class="secondary" type="button" data-code="pipeline">Query pipeline</button>
+          <button class="secondary" type="button" data-code="compare">Compare modes</button>
+          <button class="secondary" type="button" data-code="search-index">Search index</button>
+          <button class="secondary" type="button" data-code="vector-index">Vector index</button>
+          <button id="setup-open" class="secondary connection-button" type="button" title="Configure local Atlas and Voyage connections">
+            <span class="connection-dot" aria-hidden="true"></span>
+            <span id="setup-open-label">Connection</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="search-band">
+        <div class="search-band-header">
+          <div>
+            <span class="section-kicker">Care discovery</span>
+            <h2>Find care that fits your needs</h2>
+            <p class="search-caption">Explore providers, services, coverage, and availability across Austin.</p>
+          </div>
+          <div class="search-branding">
+            <span class="mongo-badge"><i aria-hidden="true"></i>Atlas Search</span>
+            <span class="atlas-badge"><i aria-hidden="true"></i>Voyage 4 embeddings</span>
+          </div>
+        </div>
+        <form id="search-form" autocomplete="off">
+          <div class="search-entry">
+            <label class="search-entry-label" for="query">
+              <span>Start your search</span>
+              <small>Provider, specialty, symptom, or procedure</small>
+            </label>
+            <div class="search-row">
+              <div class="query-combobox">
+                <input
+                  id="query"
+                  name="query"
+                  type="search"
+                  value="knee replacement orthopedic surgeon"
+                  placeholder="Search condition, procedure, specialty, provider, or symptom"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-controls="suggestion-menu"
+                  aria-expanded="false"
+                  required
+                />
+                <div id="suggestion-menu" class="suggestion-menu" role="listbox" hidden></div>
+              </div>
+              <button type="submit">Search</button>
+            </div>
+          </div>
+          <div class="preset-row" aria-label="Demo searches">
+            <span class="preset-label">Try a scenario</span>
+            <button type="button" data-query="orthapedic knee replacment" data-mode="lexical"><span><b>FT</b>Typo tolerance</span><small>full-text fuzzy match</small></button>
+            <button type="button" data-query="otolaryngologist" data-mode="lexical"><span><b>FT</b>Medical synonym</span><small>synonym source mapping</small></button>
+            <button type="button" data-query="knee replacement orthopedic surgeon" data-mode="lexical"><span><b>FT</b>Procedure precision</span><small>field boosts + phrase</small></button>
+            <button type="button" data-query="doctor who treats torn ACL after soccer injury" data-mode="hybrid" data-profile="discovery"><span><b>HY</b>Sports injury intent</span><small>semantic-first fusion</small></button>
+            <button type="button" data-query="MRI for joint injury" data-mode="hybrid" data-profile="balanced"><span><b>HY</b>Imaging intent</span><small>cross-mode recall</small></button>
+            <button type="button" data-query="help breathing while asleep" data-mode="vector"><span><b>VS</b>Symptom recall</span><small>meaning over terms</small></button>
+            <button type="button" data-query="heart doctor telehealth" data-mode="hybrid" data-profile="balanced" data-telehealth="true" data-accepting="true"><span><b>HY</b>Care constraints</span><small>hybrid + prefilters</small></button>
+            <button type="button" data-query="anxiety medication management" data-mode="hybrid" data-profile="balanced" data-rerank="true"><span><b>HY</b>Rerank relevance</span><small>Voyage final ordering</small></button>
+          </div>
+
+          <div class="controls-row">
+            <fieldset class="segmented" aria-label="Search mode">
+              <label><input type="radio" name="mode" value="lexical" /> Full text</label>
+              <label><input type="radio" name="mode" value="vector" /> Vector</label>
+              <label><input type="radio" name="mode" value="hybrid" checked /> Hybrid</label>
+            </fieldset>
+
+            <label class="check-control">
+              <input type="checkbox" name="rerank" />
+              <span>Voyage rerank</span>
+            </label>
+            <label class="compact-select">
+              <span>Hybrid blend</span>
+              <select name="hybrid_profile" id="hybrid-profile">
+                <option value="balanced">Balanced 55 / 45</option>
+                <option value="precision">Lexical first 75 / 25</option>
+                <option value="discovery">Semantic first 35 / 65</option>
+              </select>
+            </label>
+            <label class="compact-select">
+              <span>Show</span>
+              <select name="limit">
+                <option value="8">8 results</option>
+                <option value="12" selected>12 results</option>
+                <option value="20">20 results</option>
+              </select>
+            </label>
+            <button type="button" class="filter-toggle" aria-expanded="false" aria-controls="advanced-filters">Filters</button>
+          </div>
+
+          <div class="filters-container" id="advanced-filters" hidden>
+            <div class="filters-grid">
+            <label>
+              Origin
+              <select name="origin" id="origin-filter">
+                <option value="downtown">Downtown Austin</option>
+              </select>
+            </label>
+            <label>
+              Specialty
+              <select name="specialty" id="specialty-filter">
+                <option value="">Any specialty</option>
+              </select>
+            </label>
+            <label>
+              Network
+              <select name="network" id="network-filter">
+                <option value="">Any network</option>
+              </select>
+            </label>
+            <label>
+              Language
+              <select name="language" id="language-filter">
+                <option value="">Any language</option>
+              </select>
+            </label>
+            <label>
+              Distance
+              <select name="max_distance">
+                <option value="">Any distance</option>
+                <option value="5">Within 5 miles</option>
+                <option value="10">Within 10 miles</option>
+                <option value="25">Within 25 miles</option>
+              </select>
+            </label>
+            <label>
+              Rating
+              <select name="min_rating">
+                <option value="">Any rating</option>
+                <option value="4">4.0+</option>
+                <option value="4.5">4.5+</option>
+              </select>
+            </label>
+            <label>
+              Sort
+              <select name="sort">
+                <option value="relevance">Relevance</option>
+                <option value="distance">Distance</option>
+              </select>
+            </label>
+            <label class="check-control inline-check">
+              <input type="checkbox" name="accepting_new_patients" />
+              Accepting patients
+            </label>
+            <label class="check-control inline-check">
+              <input type="checkbox" name="telehealth" />
+              Telehealth
+            </label>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="status-strip">
+        <div class="status-card primary-status">
+          <span class="label">Query Text From User</span>
+          <strong id="query-display">knee replacement orthopedic surgeon</strong>
+        </div>
+        <div class="status-card">
+          <span class="label">Strategy</span>
+          <div id="execution-badge" class="execution-badge">
+            <strong id="execution-display">Ready</strong>
+            <small id="execution-description"></small>
+          </div>
+        </div>
+        <div class="status-card">
+          <span class="label">Corpus</span>
+          <strong id="corpus-display">Checking</strong>
+        </div>
+        <div class="status-card metric-status">
+          <span class="label">Query window</span>
+          <strong id="query-metrics">Ready</strong>
+        </div>
+        <button class="secondary compact" type="button" data-code="sample">Sample docs</button>
+      </section>
+
+      <details id="stage-timings" class="stage-timings" aria-label="Search execution timing and telemetry" hidden></details>
+
+      <section class="insights-panel">
+        <div class="panel-title-row">
+          <div>
+            <span class="section-kicker">Retrieval intelligence</span>
+            <h2>Why these results ranked</h2>
+          </div>
+          <span class="live-indicator"><i aria-hidden="true"></i>Live query signals</span>
+        </div>
+        <div class="insights-grid">
+          <div class="insight-card">
+            <div class="insight-header">
+              <h3>Search Mode</h3>
+              <button type="button" class="help-button" title="Click to learn about search modes" data-code="compare">?</button>
+            </div>
+            <div class="mode-selector-inline">
+              <fieldset class="segmented-small" aria-label="Active search mode">
+                <label id="mode-lexical-badge"><input type="radio" name="mode" value="lexical" disabled /> Full Text</label>
+                <label id="mode-vector-badge"><input type="radio" name="mode" value="vector" disabled /> Semantic</label>
+                <label id="mode-hybrid-badge"><input type="radio" name="mode" value="hybrid" checked disabled /> Hybrid</label>
+              </fieldset>
+            </div>
+            <p class="mode-description" id="mode-description">Combining keyword matching with semantic similarity for best results</p>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-header">
+              <h3>Score Breakdown</h3>
+              <div class="insight-heading-actions">
+                <small id="score-info"></small>
+                <button type="button" class="help-button" title="Understand search scores" aria-label="Understand search scores" data-code="scoring">?</button>
+              </div>
+            </div>
+            <div id="fusion-breakdown" class="fusion-breakdown"></div>
+          </div>
+
+          <div class="insight-card">
+            <div class="insight-header">
+              <h3>Active Filters</h3>
+              <small id="filter-count"></small>
+            </div>
+            <div id="active-filters" class="active-filters"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <section class="geo-panel">
+          <div class="geo-heading">
+            <div>
+              <span class="section-kicker">Location intelligence</span>
+              <h2>Provider locations</h2>
+              <p id="geo-context">Pins reflect the active origin and distance filter</p>
+            </div>
+            <button class="secondary compact" type="button" data-code="geo">Geo query</button>
+          </div>
+          <div class="map-layout">
+            <div class="map-container">
+              <div id="leaflet-map" class="leaflet-map-container" aria-label="Austin area provider map"></div>
+            </div>
+            <div class="map-side">
+              <span class="label">Nearest Matches</span>
+              <div id="map-list" class="map-list"></div>
+            </div>
+          </div>
+        </section>
+        <section class="results-panel">
+          <div class="results-heading">
+          <div>
+            <span class="section-kicker">Provider matches</span>
+            <h2>Recommended care options</h2>
+            <p id="result-context">Ranked by the selected retrieval strategy</p>
+            <div id="facet-summary" class="facet-summary" aria-live="polite"></div>
+          </div>
+            <span id="result-count">0 matches</span>
+          </div>
+          <div id="results" class="results"></div>
+          <nav id="pagination-controls" class="pagination-controls" aria-label="Search result pages" hidden>
+            <button id="previous-page" class="secondary compact" type="button">Previous</button>
+            <span>Page <strong id="page-number">1</strong><small>Atlas searchSequenceToken</small></span>
+            <button id="next-page" class="secondary compact" type="button">Next</button>
+          </nav>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="code-dialog">
+      <div class="dialog-heading">
+        <div>
+          <span id="dialog-eyebrow" class="dialog-eyebrow">Atlas implementation</span>
+          <h2 id="dialog-title">Code</h2>
+        </div>
+        <button class="icon-button" type="button" id="close-dialog" aria-label="Close">x</button>
+      </div>
+      <div class="dialog-content">
+        <div id="code-summary" class="code-summary"></div>
+        <div id="code-panel" class="code-panel">
+          <div class="code-toolbar">
+            <span id="code-label">MongoDB aggregation</span>
+            <span>JSON</span>
+          </div>
+          <pre><code id="code-output"></code></pre>
+        </div>
+        <div id="compare-panes" class="compare-panes" hidden>
+          <div class="compare-pane">
+            <div class="compare-pane-heading"><span class="compare-mode lexical">01</span><div><h3>Full Text</h3><small>$search + BM25</small></div></div>
+            <div id="compare-lexical" class="compare-results"></div>
+          </div>
+          <div class="compare-pane">
+            <div class="compare-pane-heading"><span class="compare-mode vector">02</span><div><h3>Vector</h3><small>$vectorSearch + Voyage 4</small></div></div>
+            <div id="compare-vector" class="compare-results"></div>
+          </div>
+          <div class="compare-pane">
+            <div class="compare-pane-heading"><span class="compare-mode hybrid">03</span><div><h3>Hybrid</h3><small>$rankFusion</small></div></div>
+            <div id="compare-hybrid" class="compare-results"></div>
+          </div>
+        </div>
+        <div id="compare-summary" class="compare-summary" hidden></div>
+        <section id="architecture-view" class="architecture-view" hidden>
+          <div class="architecture-tabs" role="tablist" aria-label="Search architecture views">
+            <button type="button" role="tab" aria-selected="true" data-architecture-mode="overview">Overview</button>
+            <button type="button" role="tab" aria-selected="false" data-architecture-mode="lexical">Full Text</button>
+            <button type="button" role="tab" aria-selected="false" data-architecture-mode="vector">Vector</button>
+            <button type="button" role="tab" aria-selected="false" data-architecture-mode="hybrid">Hybrid</button>
+            <button type="button" role="tab" aria-selected="false" data-architecture-mode="rerank">Rerank</button>
+          </div>
+          <div id="architecture-canvas" class="architecture-canvas"></div>
+        </section>
+        <section id="score-explainer" class="score-explainer" hidden></section>
+      </div>
+    </dialog>
+
+    <dialog id="setup-dialog" class="setup-dialog" aria-labelledby="setup-title">
+      <form id="setup-form" class="setup-shell">
+        <header class="setup-header">
+          <div>
+            <span class="section-kicker">Local connection setup</span>
+            <h2 id="setup-title">Connect FindCare to Atlas and Voyage AI</h2>
+            <p>Credentials are saved only to a private <code>.env</code> file inside this FindCare folder.</p>
+          </div>
+          <button id="setup-close" class="icon-button" type="button" aria-label="Close connection setup">x</button>
+        </header>
+
+        <div class="setup-content">
+          <label class="setup-field" for="setup-atlas-uri">
+            <span>MongoDB Atlas URI</span>
+            <input id="setup-atlas-uri" type="password" autocomplete="new-password" placeholder="mongodb+srv://username:password@cluster.mongodb.net/" />
+            <small>Use an Atlas database user with access to the existing FindCare collection and search indexes.</small>
+          </label>
+
+          <label class="setup-field" for="setup-voyage-key">
+            <span>Voyage API key</span>
+            <input id="setup-voyage-key" type="password" autocomplete="new-password" placeholder="pa-..." />
+            <small>The key is checked with one minimal Voyage 4 query embedding.</small>
+          </label>
+
+          <div class="setup-grid">
+            <label class="setup-field" for="setup-database">
+              <span>Database</span>
+              <input id="setup-database" type="text" value="findcare_demo" autocomplete="off" />
+            </label>
+            <label class="setup-field" for="setup-collection">
+              <span>Collection</span>
+              <input id="setup-collection" type="text" value="care_providers" autocomplete="off" />
+            </label>
+          </div>
+
+          <label class="setup-show-values">
+            <input id="setup-show-values" type="checkbox" />
+            <span>Show connection values</span>
+          </label>
+
+          <label class="setup-provision-option">
+            <input id="setup-install-data" type="checkbox" checked />
+            <span>
+              <strong>Prepare this namespace when needed</strong>
+              <small>Install the 100 bundled synthetic providers, medical synonyms, and missing search, vector, and geospatial indexes.</small>
+            </span>
+          </label>
+
+          <div class="setup-notice">
+            Add this computer's current IP address to Atlas Network Access before validating. Preparation runs only when the selected namespace is incomplete and requires permission to write data and create indexes.
+          </div>
+
+          <div id="setup-progress" class="setup-progress" aria-label="Connection readiness checks">
+            <div class="setup-progress-track"><span id="setup-progress-bar"></span></div>
+            <div class="setup-stage-list">
+              <div class="setup-stage" data-setup-stage="atlas"><i aria-hidden="true"></i><span><strong>MongoDB Atlas</strong><small>Waiting to validate</small></span><em>Pending</em></div>
+              <div class="setup-stage" data-setup-stage="voyage"><i aria-hidden="true"></i><span><strong>Voyage AI</strong><small>Waiting to validate</small></span><em>Pending</em></div>
+              <div class="setup-stage" data-setup-stage="data"><i aria-hidden="true"></i><span><strong>Provider data + indexes</strong><small>Waiting for Atlas</small></span><em>Pending</em></div>
+              <div class="setup-stage" data-setup-stage="save"><i aria-hidden="true"></i><span><strong>Local credentials</strong><small>Not written yet</small></span><em>Pending</em></div>
+              <div class="setup-stage" data-setup-stage="portal"><i aria-hidden="true"></i><span><strong>FindCare search portal</strong><small>Waiting for connections</small></span><em>Pending</em></div>
+            </div>
+          </div>
+
+          <div id="setup-feedback" class="setup-feedback" role="status" aria-live="polite"></div>
+        </div>
+
+        <footer class="setup-actions">
+          <span id="setup-storage">Saved locally in this application folder</span>
+          <button id="setup-save" type="submit">Verify and save</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.min.js"></script>
+    <script src="./app.js?v=atlas-search-v25"></script>
+  </body>
+</html>
