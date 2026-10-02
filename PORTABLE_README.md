@@ -2,6 +2,8 @@
 
 This package runs the complete FindCare Atlas Search demo locally. It includes 100 synthetic provider records, downloads its own pinned Python runtime, keeps every runtime file inside this folder, and connects to MongoDB Atlas and Voyage AI only after browser-based setup.
 
+> **Synthetic demo notice:** All provider records and network participation are fictional. Third-party trademarks belong to their respective owners; no affiliation or endorsement is implied. This project demonstrates search technology and does not provide medical advice.
+
 ## Requirements
 
 - macOS or Linux on Apple Silicon/ARM64 or x86-64
@@ -75,7 +77,7 @@ make verify-dist
 From the directory containing both release files:
 
 ```bash
-shasum -a 256 -c findcare-search-portable-v1.2.2.zip.sha256
+shasum -a 256 -c findcare-search-portable-v1.2.3.zip.sha256
 ```
 
 On Linux, `sha256sum -c` can be used instead.

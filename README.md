@@ -2,6 +2,8 @@
 
 This demo shows how MongoDB Atlas can centralize a healthcare search experience like a FindCare portal. One provider document supports Atlas Search full-text relevance, Atlas Vector Search semantic retrieval, hybrid search with `$rankFusion`, and optional Voyage reranking.
 
+> **Synthetic demo notice:** All provider records and network participation are fictional. Third-party trademarks belong to their respective owners; no affiliation or endorsement is implied. This project demonstrates search technology and does not provide medical advice.
+
 The UI is intentionally focused: search for a condition, procedure, specialty, symptom, or provider; apply common filters; switch between full-text, vector, and hybrid modes; then inspect the exact query pipeline, native score details, sample documents, or either index definition.
 
 ## Portable Launch

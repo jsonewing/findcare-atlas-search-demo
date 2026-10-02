@@ -1814,6 +1814,40 @@ dialog[data-view="scoring"] .dialog-content {
   overflow: auto;
 }
 
+.demo-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 10px 0 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(128, 185, 167, 0.24);
+  border-radius: 6px;
+  background: #0b2b31;
+  color: #b8cbc8;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.demo-notice strong {
+  flex: 0 0 auto;
+  color: #00ed64;
+  font-size: 11px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+@media (max-width: 720px) {
+  .demo-notice {
+    display: block;
+  }
+
+  .demo-notice strong {
+    display: block;
+    margin-bottom: 3px;
+  }
+}
+
 /* Primary search entry and scenario-mode wayfinding */
 .search-entry {
   position: relative;
