@@ -21,7 +21,7 @@ jobs:
       - name: Run tests and JavaScript syntax check
         run: make test
       - name: Install zsh
-        run: sudo apt-get update && sudo apt-get install -y zsht
+        run: sudo apt-get update && sudo apt-get install -y zsh
       - name: Validate launcher syntax
         run: |
           bash -n run.sh scripts/setup-python.sh start.sh
