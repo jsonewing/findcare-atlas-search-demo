@@ -19,7 +19,9 @@ jobs:
       - name: Create the project environment and install pinned dependencies
         run: make setup
       - name: Run tests and JavaScript syntax check
-        run: make test
+        run: make tes
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsht
       - name: Validate launcher syntax
         run: |
           bash -n run.sh scripts/setup-python.sh start.sh
